@@ -19,22 +19,30 @@
           <p class="app-subtitle">ナビゲーター: ふじきゅん</p>
         </div>
       </div>
-      <button class="header-btn" id="openMenuBtn" aria-label="メニューを開く" aria-haspopup="true" aria-controls="sideMenu">☰</button>
+      <button class="header-btn" id="openMenuBtn" aria-label="メニューを開く" aria-haspopup="dialog" aria-controls="moreMenu">⋯</button>
     </header>
 
-    <nav id="sideMenu" class="side-menu" aria-label="サブメニュー" hidden>
-      <button class="close" id="closeMenuBtn" aria-label="メニューを閉じる">×</button>
-      <ul>
-        <li><button class="menu-link" data-target="map">防災マップ</button></li>
-        <li><button class="menu-link" data-target="kit">持ち出しチェック</button></li>
-        <li><button class="menu-link" data-target="calendar">訓練カレンダー</button></li>
-        <li><button class="menu-link" data-target="settings">設定（保護者/先生）</button></li>
-      </ul>
-    </nav>
+    <!-- Secondary menu: Bottom sheet (mobile) / Right overlay (desktop) -->
+    <div id="menuBackdrop" class="backdrop" hidden></div>
+    <section id="moreMenu" class="sheet" role="dialog" aria-modal="true" aria-labelledby="moreMenuTitle" hidden>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="sheet-head">
+        <h2 id="moreMenuTitle">メニュー</h2>
+        <button class="icon-btn" id="closeMenuBtn" aria-label="メニューを閉じる">×</button>
+      </div>
+      <nav class="sheet-body" aria-label="サブメニュー">
+        <button class="sheet-link" data-target="map">防災マップ</button>
+        <button class="sheet-link" data-target="kit">持ち出しチェック</button>
+        <button class="sheet-link" data-target="calendar">訓練カレンダー</button>
+        <button class="sheet-link" data-target="settings">設定（保護者/先生）</button>
+      </nav>
+    </section>
 
     <main id="app" class="app" role="main">
+      <!-- Home -->
       <section id="home" class="page" aria-labelledby="homeTitle">
         <h2 id="homeTitle" class="visually-hidden">ホーム</h2>
+
         <div class="hero">
           <div class="hero-left">
             <h3>きょうのミッション</h3>
@@ -49,6 +57,17 @@
             <p class="fujikyun-line" aria-live="polite">こんにちは！ きょうも少しだけ防災を学ぼう！</p>
           </div>
         </div>
+
+        <!-- Quick Access -->
+        <section class="card quick">
+          <h3>クイックアクセス</h3>
+          <div class="quick-grid">
+            <button class="quick-item" data-open-tab="map">🗺️ 防災マップ</button>
+            <button class="quick-item" data-open-tab="kit">🎒 持ち出しチェック</button>
+            <button class="quick-item" data-open-tab="calendar">🗓️ 訓練カレンダー</button>
+            <button class="quick-item" data-open-tab="settings">⚙️ 設定</button>
+          </div>
+        </section>
 
         <div class="home-grid">
           <section class="card news">
@@ -70,6 +89,7 @@
         </div>
       </section>
 
+      <!-- Quiz -->
       <section id="quiz" class="page" aria-labelledby="quizTitle" hidden>
         <h2 id="quizTitle">クイズ</h2>
         <div class="chip-row" role="tablist" aria-label="カテゴリ">
@@ -100,6 +120,7 @@
         </div>
       </section>
 
+      <!-- AR -->
       <section id="ar" class="page" aria-labelledby="arTitle" hidden>
         <h2 id="arTitle">AR体験</h2>
         <div class="card">
@@ -124,6 +145,7 @@
         </div>
       </section>
 
+      <!-- Learn -->
       <section id="learn" class="page" aria-labelledby="learnTitle" hidden>
         <h2 id="learnTitle">学ぶ（動画・藤沢市の取組）</h2>
         <div class="tabs">
@@ -175,6 +197,7 @@
         </div>
       </section>
 
+      <!-- My -->
       <section id="my" class="page" aria-labelledby="myTitle" hidden>
         <h2 id="myTitle">マイ</h2>
         <div class="my-grid">
@@ -200,6 +223,7 @@
         </div>
       </section>
 
+      <!-- Utility pages -->
       <section id="map" class="page" aria-labelledby="mapTitle" hidden>
         <h2 id="mapTitle">防災マップ</h2>
         <div class="card">
