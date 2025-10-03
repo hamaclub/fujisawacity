@@ -8,13 +8,10 @@ const state = loadState() || {
   badges: [],
   weaknesses: {},
 };
-
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
-}
+function loadState() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; } }
 function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
 
-// Utility
+// Utils
 function $(sel, root=document) { return root.querySelector(sel); }
 function $all(sel, root=document) { return Array.from(root.querySelectorAll(sel)); }
 function showToast(text) { const t = $("#toast"); t.textContent = text; t.hidden = false; setTimeout(()=>{ t.hidden = true; }, 1600); }
@@ -27,18 +24,27 @@ function setTab(targetId) {
   });
 }
 
-// Side menu
-$("#openMenuBtn").addEventListener("click", () => { $("#sideMenu").hidden = false; });
-$("#closeMenuBtn").addEventListener("click", () => { $("#sideMenu").hidden = true; });
-$all(".menu-link").forEach(b => b.addEventListener("click", (e) => { setTab(e.currentTarget.dataset.target); $("#sideMenu").hidden = true; }));
+// Secondary menu: open/close
+const backdrop = $("#menuBackdrop");
+const sheet = $("#moreMenu");
+function openMenu() { backdrop.hidden = false; sheet.hidden = false; $("#closeMenuBtn").focus(); }
+function closeMenu() { backdrop.hidden = true; sheet.hidden = true; }
+$("#openMenuBtn").addEventListener("click", openMenu);
+$("#closeMenuBtn").addEventListener("click", closeMenu);
+backdrop.addEventListener("click", closeMenu);
+document.addEventListener("keydown", (e) => { if (!sheet.hidden && e.key === "Escape") closeMenu(); });
+$all(".sheet-link").forEach(b => b.addEventListener("click", (e) => { setTab(e.currentTarget.dataset.target); closeMenu(); }));
 
-// Bottom tabbar
+// Bottom tabs
 $all(".tablink").forEach(b => b.addEventListener("click", (e) => setTab(e.currentTarget.dataset.target)));
 
-// Missions quick links
-$all(".mission-btn").forEach(b => b.addEventListener("click", (e) => setTab(e.currentTarget.dataset.openTab || e.currentTarget.dataset.open-tab)));
+// Missions / Quick access
+$all(".mission-btn, .quick-item").forEach(b => b.addEventListener("click", (e) => {
+  const target = e.currentTarget.dataset.openTab || e.currentTarget.dataset.open-tab; // dataset.camelCase for open-tab
+  setTab(target);
+}));
 
-// Home populate
+// Home lists
 const news = [
   "防災訓練が今週末に実施されます（鵠沼海岸）",
   "津波避難ビルの案内板を更新しました",
@@ -48,20 +54,17 @@ const events = [
   "10/10(土) 津波避難訓練 9:00〜",
   "10/15(木) 家庭の備蓄チェックデー",
 ];
-function renderList(sel, items) { const ul = typeof sel === "string" ? $(sel) : sel; ul.innerHTML = items.map(li => `<li>${li}</li>`).join(""); }
+function renderList(id, items) { const ul = $(id); ul.innerHTML = items.map(li => `<li>${li}</li>`).join(""); }
 renderList("#newsList", news);
 renderList("#eventList", events);
 
-// Progress bind
+// Progress + streak
 function updateProgressUI() {
   $("#points").textContent = `${state.points} pt`;
   $("#level").textContent = `Lv ${state.level}`;
   $("#streak").textContent = state.streak;
   $("#streakMy").textContent = state.streak;
 }
-updateProgressUI();
-
-// Streak logic
 (function updateStreak() {
   const today = new Date().toISOString().slice(0,10);
   if (state.lastStudyDate !== today) {
@@ -69,11 +72,11 @@ updateProgressUI();
     state.streak = state.lastStudyDate === yesterday ? (state.streak + 1) : 1;
     state.lastStudyDate = today;
     saveState();
-    updateProgressUI();
   }
+  updateProgressUI();
 })();
 
-// Quiz data
+// Quiz
 const QUIZ_BANK = {
   earthquake: [
     { q: "地震のとき まず大事なのは？", choices: ["にげる","あわてる","身を守る","窓を開ける"], a: 2, why: "まずは落下物から身を守る(ドロップ・カバー・ホールドオン)" },
@@ -92,11 +95,11 @@ const QUIZ_BANK = {
     { q: "藤沢市の津波避難ビルは？", choices: ["駅のホーム","指定された建物","公園のベンチ","海の家"], a: 1, why: "市が指定する避難ビルを確認" },
   ],
 };
-
 let currentCategory = "earthquake";
 let currentIndex = 0;
 let currentQuiz = QUIZ_BANK[currentCategory];
 
+function catLabel(cat) { return {earthquake:"地震",tsunami:"津波",typhoon:"台風",evac:"避難",local:"地域"}[cat] || cat; }
 function loadQuizCard() {
   currentQuiz = QUIZ_BANK[currentCategory];
   const item = currentQuiz[currentIndex % currentQuiz.length];
@@ -108,22 +111,17 @@ function loadQuizCard() {
   $("#quizFeedback").textContent = "";
   $("#nextQuestionBtn").disabled = true;
 }
-function catLabel(cat) {
-  return {earthquake:"地震",tsunami:"津波",typhoon:"台風",evac:"避難",local:"地域"}[cat] || cat;
-}
-
-$all('.chip').forEach(ch => ch.addEventListener('click', (e) => {
-  $all('.chip').forEach(c => { c.classList.remove('is-active'); c.setAttribute('aria-selected','false'); });
-  const el = e.currentTarget; el.classList.add('is-active'); el.setAttribute('aria-selected','true');
+$all(".chip").forEach(ch => ch.addEventListener("click", (e) => {
+  $all(".chip").forEach(c => { c.classList.remove("is-active"); c.setAttribute("aria-selected","false"); });
+  const el = e.currentTarget; el.classList.add("is-active"); el.setAttribute("aria-selected","true");
   currentCategory = el.dataset.category; currentIndex = 0; loadQuizCard();
 }));
-
-$all('.choice').forEach(btn => btn.addEventListener('click', (e) => {
+$all(".choice").forEach(btn => btn.addEventListener("click", (e) => {
   const i = Number(e.currentTarget.dataset.index);
   const item = currentQuiz[currentIndex % currentQuiz.length];
   const isCorrect = i === item.a;
-  e.currentTarget.classList.add(isCorrect ? 'correct' : 'wrong');
-  $all('.choice').forEach(b => b.disabled = true);
+  e.currentTarget.classList.add(isCorrect ? "correct" : "wrong");
+  $all(".choice").forEach(b => b.disabled = true);
   $("#quizFeedback").textContent = isCorrect ? "やったね！ 正解！" : `ざんねん… 正解は「${item.choices[item.a]}」`;
   if (isCorrect) {
     state.points += 1;
@@ -135,8 +133,7 @@ $all('.choice').forEach(btn => btn.addEventListener('click', (e) => {
   }
   $("#nextQuestionBtn").disabled = false;
 }));
-
-$("#nextQuestionBtn").addEventListener('click', () => { currentIndex += 1; loadQuizCard(); });
+$("#nextQuestionBtn").addEventListener("click", () => { currentIndex += 1; loadQuizCard(); });
 
 function incWeakness(cat) { state.weaknesses[cat] = (state.weaknesses[cat]||0) + 1; renderWeakness(); saveState(); }
 function renderWeakness() {
@@ -144,32 +141,28 @@ function renderWeakness() {
   const entries = Object.entries(state.weaknesses);
   ul.innerHTML = entries.length ? entries.map(([k,v]) => `<li>${catLabel(k)}: × ${v}</li>`).join("") : "<li>データなし</li>";
 }
-renderWeakness();
-
 function maybeAddBadge(id, label) { if (!state.badges.find(b => b.id===id)) { state.badges.push({id,label}); renderBadges(); } }
 function renderBadges() { const shelf = $("#badgeShelf"); shelf.innerHTML = state.badges.map(b => `<span class="badge">${b.label}</span>`).join(""); }
-renderBadges();
+renderWeakness(); renderBadges();
 
-// Learn section
-$all('.tab').forEach(t => t.addEventListener('click', (e) => {
+// Learn
+$all(".tab").forEach(t => t.addEventListener("click", (e) => {
   const tab = e.currentTarget.dataset.tab;
-  $all('.tab').forEach(x => { x.classList.toggle('is-active', x.dataset.tab===tab); x.setAttribute('aria-selected', String(x.dataset.tab===tab)); });
-  $("#videosTab").hidden = tab !== 'videos';
-  $("#initiativesTab").hidden = tab !== 'initiatives';
+  $all(".tab").forEach(x => { x.classList.toggle("is-active", x.dataset.tab===tab); x.setAttribute("aria-selected", String(x.dataset.tab===tab)); });
+  $("#videosTab").hidden = tab !== "videos";
+  $("#initiativesTab").hidden = tab !== "initiatives";
 }));
-
-$all('.play-btn').forEach(b => b.addEventListener('click', (e) => {
+$all(".play-btn").forEach(b => b.addEventListener("click", (e) => {
   const id = e.currentTarget.dataset.video;
-  const src = id === 'video2' ? 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4' : 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+  const src = id === "video2" ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
   $("#videoSrc").src = src;
   $("#videoPlayer").hidden = false;
   $("#videoEl").load(); $("#videoEl").play();
 }));
+$("#playbackRate").addEventListener("change", (e) => { $("#videoEl").playbackRate = Number(e.target.value); });
+$("#miniQuizBtn").addEventListener("click", () => { setTab("quiz"); showToast("理解度クイズを開始"); });
 
-$("#playbackRate").addEventListener('change', (e) => { $("#videoEl").playbackRate = Number(e.target.value); });
-$("#miniQuizBtn").addEventListener('click', () => { setTab('quiz'); showToast('理解度クイズを開始'); });
-
-// Initiatives (藤沢市の取組)
+// Initiatives
 const initiatives = [
   { title: "津波避難ビル紹介", desc: "場所/安全ポイント/動画", area: "片瀬" },
   { title: "防災教育の学校連携", desc: "市内小中の取組レポート", area: "全域" },
@@ -177,8 +170,8 @@ const initiatives = [
 ];
 (function renderInitiatives(){ const ul = $("#initiativeList"); ul.innerHTML = initiatives.map(i => `<li><strong>${i.title}</strong> — ${i.desc}（${i.area}）</li>`).join(""); })();
 
-// My page share
-$("#shareBtn").addEventListener('click', () => { $("#shareCode").hidden = !$("#shareCode").hidden; });
+// My
+$("#shareBtn").addEventListener("click", () => { $("#shareCode").hidden = !$("#shareCode").hidden; });
 
 // Kit checklist
 const KIT_PRESETS = {
@@ -186,19 +179,19 @@ const KIT_PRESETS = {
   junior: ["水(1L)", "モバイルバッテリー", "ライト", "簡易食"],
   family: ["水(家族分)", "食料(3日分)", "救急セット", "トイレ袋"],
 };
-function renderKit(preset='elementary') {
+function renderKit(preset="elementary") {
   const items = KIT_PRESETS[preset];
   const ul = $("#kitList");
   ul.innerHTML = items.map((label,i) => `<li><input type="checkbox" id="kit_${i}"><label for="kit_${i}">${label}</label></li>`).join("");
 }
 renderKit();
-$("#kitPreset").addEventListener('change', (e) => renderKit(e.target.value));
+$("#kitPreset").addEventListener("change", (e) => renderKit(e.target.value));
 
-// Calendar sample
+// Calendar
 renderList("#calendarList", ["11/3(祝) 総合防災訓練", "11/10(日) 津波避難訓練"]);
 
 // AR placeholder
-$("#arStartBtn").addEventListener('click', () => {
+$("#arStartBtn").addEventListener("click", () => {
   const scene = $("#arScene").value;
   const text = {
     furniture: "家具の転倒を防ぐ: L字金具で固定/ストッパー",
@@ -209,8 +202,8 @@ $("#arStartBtn").addEventListener('click', () => {
   $("#arOverlay").textContent = text;
   showToast("ARヒントを表示しました");
 });
-$("#arSnapBtn").addEventListener('click', () => { maybeAddBadge('ar_first','AR体験したよ'); showToast('スクショを保存しました（擬似）'); });
+$("#arSnapBtn").addEventListener("click", () => { maybeAddBadge("ar_first","AR体験したよ"); showToast("スクショを保存しました（擬似）"); });
 
-// Initial load
+// Init
 loadQuizCard();
-setTab('home');
+setTab("home");
