@@ -19,23 +19,15 @@
           <p class="app-subtitle">ナビゲーター: ふじきゅん</p>
         </div>
       </div>
-      <button class="header-btn" id="openMenuBtn" aria-label="メニューを開く" aria-haspopup="dialog" aria-controls="moreMenu">⋯</button>
+      <!-- メニュー削除済み（何も表示しない） -->
+      <div class="header-spacer" aria-hidden="true"></div>
     </header>
 
-    <!-- Secondary menu: Bottom sheet (mobile) / Right overlay (desktop) -->
-    <div id="menuBackdrop" class="backdrop" hidden></div>
-    <section id="moreMenu" class="sheet" role="dialog" aria-modal="true" aria-labelledby="moreMenuTitle" hidden>
-      <div class="sheet-handle" aria-hidden="true"></div>
-      <div class="sheet-head">
-        <h2 id="moreMenuTitle">メニュー</h2>
-        <button class="icon-btn" id="closeMenuBtn" aria-label="メニューを閉じる">×</button>
-      </div>
-      <nav class="sheet-body" aria-label="サブメニュー">
-        <button class="sheet-link" data-target="map">防災マップ</button>
-        <button class="sheet-link" data-target="kit">持ち出しチェック</button>
-        <button class="sheet-link" data-target="calendar">訓練カレンダー</button>
-        <button class="sheet-link" data-target="settings">設定（保護者/先生）</button>
-      </nav>
+    <!-- ゲームHUD -->
+    <section class="hud" aria-label="ステータス">
+      <div class="pill">Lv <span id="level">1</span></div>
+      <div class="pill">⭐ <span id="points">0 pt</span></div>
+      <div class="pill">🔥 連続 <span id="streak">0</span> 日</div>
     </section>
 
     <main id="app" class="app" role="main">
@@ -43,79 +35,82 @@
       <section id="home" class="page" aria-labelledby="homeTitle">
         <h2 id="homeTitle" class="visually-hidden">ホーム</h2>
 
-        <div class="hero">
-          <div class="hero-left">
-            <h3>きょうのミッション</h3>
-            <ul class="missions" aria-label="きょうのミッション">
-              <li><button class="mission-btn" data-open-tab="quiz">クイズに3問挑戦</button></li>
-              <li><button class="mission-btn" data-open-tab="learn">1分動画を1本視聴</button></li>
-              <li><button class="mission-btn" data-open-tab="ar">ARで安全チェック</button></li>
-            </ul>
-          </div>
-          <div class="hero-right" aria-label="ふじきゅんの応援">
-            <div class="fujikyun" role="img" aria-label="ふじきゅん">✨ふじきゅん✨</div>
-            <p class="fujikyun-line" aria-live="polite">こんにちは！ 今日も少しだけ防災を学ぼう！</p>
-          </div>
-        </div>
-
-        <!-- Quick Access -->
-        <section class="card quick">
-          <h3>クイックアクセス</h3>
-          <div class="quick-grid">
-            <button class="quick-item" data-open-tab="map">🗺️ 防災マップ</button>
-            <button class="quick-item" data-open-tab="kit">🎒 持ち出しチェック</button>
-            <button class="quick-item" data-open-tab="calendar">🗓️ 訓練カレンダー</button>
-            <button class="quick-item" data-open-tab="settings">⚙️ 設定</button>
-          </div>
-        </section>
-
-        <div class="home-grid">
-          <section class="card news">
-            <h3>藤沢市の最新防災ニュース</h3>
-            <ul id="newsList" class="list"></ul>
-          </section>
-          <section class="card events">
-            <h3>今週の訓練</h3>
-            <ul id="eventList" class="list"></ul>
-          </section>
-          <section class="card progress">
-            <h3>学習の進捗</h3>
-            <div class="progress-ring" aria-label="達成率">
-              <div class="ring"></div>
-              <div class="ring-label"><span id="level">Lv 1</span><small id="points">0 pt</small></div>
+        <div class="stage">
+          <div class="hero">
+            <div class="hero-left">
+              <h3>きょうのミッション</h3>
+              <ul class="missions" aria-label="きょうのミッション">
+                <li><button class="mission-btn" data-open-tab="quiz">クイズに3問挑戦</button></li>
+                <li><button class="mission-btn" data-open-tab="learn">1分動画を1本視聴</button></li>
+                <li><button class="mission-btn" data-open-tab="ar">ARで安全チェック</button></li>
+              </ul>
             </div>
-            <div class="streak" aria-label="連続日数">連続 <strong id="streak">0</strong> 日</div>
+            <div class="hero-right" aria-label="ふじきゅんの応援">
+              <div class="fujikyun" role="img" aria-label="ふじきゅん">✨ふじきゅん✨</div>
+              <p class="fujikyun-line" aria-live="polite">こんにちは！ きょうも少しだけ防災を学ぼう！</p>
+            </div>
+          </div>
+
+          <!-- Quick Access（メニュー代替・主画面を塞がない） -->
+          <section class="card quick">
+            <h3>クイックアクセス</h3>
+            <div class="quick-grid">
+              <button class="quick-item" data-open-tab="map">🗺️ 防災マップ</button>
+              <button class="quick-item" data-open-tab="kit">🎒 持ち出しチェック</button>
+              <button class="quick-item" data-open-tab="calendar">🗓️ 訓練カレンダー</button>
+              <button class="quick-item" data-open-tab="settings">⚙️ 設定</button>
+            </div>
           </section>
+
+          <div class="home-grid">
+            <section class="card news">
+              <h3>藤沢市の最新防災ニュース</h3>
+              <ul id="newsList" class="list"></ul>
+            </section>
+            <section class="card events">
+              <h3>今週の訓練</h3>
+              <ul id="eventList" class="list"></ul>
+            </section>
+            <section class="card progress">
+              <h3>学習の進捗</h3>
+              <div class="progress-ring" aria-label="達成率">
+                <div class="ring"></div>
+                <div class="ring-label"><span>Lv <span id="levelHUD">1</span></span><small id="pointsHUD">0 pt</small></div>
+              </div>
+            </section>
+          </div>
         </div>
       </section>
 
       <!-- Quiz -->
       <section id="quiz" class="page" aria-labelledby="quizTitle" hidden>
         <h2 id="quizTitle">クイズ</h2>
-        <div class="chip-row" role="tablist" aria-label="カテゴリ">
-          <button class="chip is-active" role="tab" aria-selected="true" data-category="earthquake">地震</button>
-          <button class="chip" role="tab" aria-selected="false" data-category="tsunami">津波</button>
-          <button class="chip" role="tab" aria-selected="false" data-category="typhoon">台風</button>
-          <button class="chip" role="tab" aria-selected="false" data-category="evac">避難</button>
-          <button class="chip" role="tab" aria-selected="false" data-category="local">地域</button>
-        </div>
+        <div class="stage">
+          <div class="chip-row" role="tablist" aria-label="カテゴリ">
+            <button class="chip is-active" role="tab" aria-selected="true" data-category="earthquake">地震</button>
+            <button class="chip" role="tab" aria-selected="false" data-category="tsunami">津波</button>
+            <button class="chip" role="tab" aria-selected="false" data-category="typhoon">台風</button>
+            <button class="chip" role="tab" aria-selected="false" data-category="evac">避難</button>
+            <button class="chip" role="tab" aria-selected="false" data-category="local">地域</button>
+          </div>
 
-        <div id="quizCard" class="quiz-card" aria-live="polite" aria-atomic="true">
-          <div class="quiz-head">
-            <div class="quiz-meta"><span id="quizCounter">1/5</span>・<span id="quizCategoryLabel">地震</span></div>
-          </div>
-          <div class="quiz-body">
-            <p id="quizQuestion" class="question">読み込み中...</p>
-            <div class="choices" role="group" aria-label="選択肢">
-              <button class="choice" data-index="0"></button>
-              <button class="choice" data-index="1"></button>
-              <button class="choice" data-index="2"></button>
-              <button class="choice" data-index="3"></button>
+          <div id="quizCard" class="quiz-card game-card" aria-live="polite" aria-atomic="true">
+            <div class="quiz-head">
+              <div class="quiz-meta"><span id="quizCounter">1/5</span>・<span id="quizCategoryLabel">地震</span></div>
             </div>
-          </div>
-          <div class="quiz-foot">
-            <div id="quizFeedback" class="feedback" aria-live="polite"></div>
-            <button id="nextQuestionBtn" class="primary" disabled>つぎへ</button>
+            <div class="quiz-body">
+              <p id="quizQuestion" class="question">読み込み中...</p>
+              <div class="choices" role="group" aria-label="選択肢">
+                <button class="choice" data-index="0"></button>
+                <button class="choice" data-index="1"></button>
+                <button class="choice" data-index="2"></button>
+                <button class="choice" data-index="3"></button>
+              </div>
+            </div>
+            <div class="quiz-foot">
+              <div id="quizFeedback" class="feedback" aria-live="polite"></div>
+              <button id="nextQuestionBtn" class="primary" disabled>つぎへ</button>
+            </div>
           </div>
         </div>
       </section>
@@ -123,24 +118,26 @@
       <!-- AR -->
       <section id="ar" class="page" aria-labelledby="arTitle" hidden>
         <h2 id="arTitle">AR体験</h2>
-        <div class="card">
-          <p class="safety">周りを見て、止まって体験しよう。室内で歩きながらの利用はしません。</p>
-          <div class="ar-stage" role="img" aria-label="ARシミュレーション画面">
-            <div class="ar-overlay" id="arOverlay">家具の転倒を防ぐには、L字金具で固定しよう</div>
-          </div>
-          <div class="row">
-            <label for="arScene">シーン選択</label>
-            <select id="arScene">
-              <option value="furniture">家具転倒</option>
-              <option value="tsunami">津波の高さ</option>
-              <option value="liquefaction">液状化</option>
-              <option value="route">避難経路</option>
-            </select>
-            <button id="arStartBtn" class="primary">体験をはじめる</button>
-          </div>
-          <div class="row">
-            <button id="arSnapBtn">スクショ保存</button>
-            <input id="arMemo" type="text" inputmode="text" placeholder="学んだことを1行でメモ" aria-label="学んだことメモ" />
+        <div class="stage">
+          <div class="card">
+            <p class="safety">周りを見て、止まって体験しよう。室内で歩きながらの利用はしません。</p>
+            <div class="ar-stage game-surface" role="img" aria-label="ARシミュレーション画面">
+              <div class="ar-overlay" id="arOverlay">家具の転倒を防ぐには、L字金具で固定しよう</div>
+            </div>
+            <div class="row">
+              <label for="arScene">シーン選択</label>
+              <select id="arScene">
+                <option value="furniture">家具転倒</option>
+                <option value="tsunami">津波の高さ</option>
+                <option value="liquefaction">液状化</option>
+                <option value="route">避難経路</option>
+              </select>
+              <button id="arStartBtn" class="primary">体験をはじめる</button>
+            </div>
+            <div class="row">
+              <button id="arSnapBtn">スクショ保存</button>
+              <input id="arMemo" type="text" inputmode="text" placeholder="学んだことを1行でメモ" aria-label="学んだことメモ" />
+            </div>
           </div>
         </div>
       </section>
@@ -148,130 +145,142 @@
       <!-- Learn -->
       <section id="learn" class="page" aria-labelledby="learnTitle" hidden>
         <h2 id="learnTitle">学ぶ（動画・藤沢市の取組）</h2>
-        <div class="tabs">
-          <button class="tab is-active" data-tab="videos" aria-selected="true">動画</button>
-          <button class="tab" data-tab="initiatives" aria-selected="false">藤沢市の取組</button>
-        </div>
-
-        <div id="videosTab" class="tab-panel">
-          <div class="video-list">
-            <article class="video-card">
-              <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="地震のときの身の守り方 サムネイル" />
-              <div class="video-meta">
-                <h3>1分でわかる 地震のとき</h3>
-                <p>対象: 小学1-3年 ／ 1:00</p>
-                <button class="play-btn" data-video="video1">再生</button>
-              </div>
-            </article>
-            <article class="video-card">
-              <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="津波避難の基本 サムネイル" />
-              <div class="video-meta">
-                <h3>津波からにげる3つのポイント</h3>
-                <p>対象: 小学4-6年 ／ 1:30</p>
-                <button class="play-btn" data-video="video2">再生</button>
-              </div>
-            </article>
+        <div class="stage">
+          <div class="tabs">
+            <button class="tab is-active" data-tab="videos" aria-selected="true">動画</button>
+            <button class="tab" data-tab="initiatives" aria-selected="false">藤沢市の取組</button>
           </div>
 
-          <div class="player" id="videoPlayer" hidden>
-            <video id="videoEl" controls playsinline>
-              <source id="videoSrc" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
-              <track kind="captions" srclang="ja" label="日本語字幕" default />
-            </video>
-            <div class="player-actions">
-              <button id="miniQuizBtn">理解度クイズへ</button>
-              <label>速度
-                <select id="playbackRate">
-                  <option value="0.75">0.75x</option>
-                  <option value="1" selected>1x</option>
-                  <option value="1.25">1.25x</option>
-                  <option value="1.5">1.5x</option>
-                </select>
-              </label>
+          <div id="videosTab" class="tab-panel">
+            <div class="video-list">
+              <article class="video-card game-card">
+                <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="地震のときの身の守り方 サムネイル" />
+                <div class="video-meta">
+                  <h3>1分でわかる 地震のとき</h3>
+                  <p>対象: 小学1-3年 ／ 1:00</p>
+                  <button class="play-btn">再生</button>
+                </div>
+              </article>
+              <article class="video-card game-card">
+                <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="津波避難の基本 サムネイル" />
+                <div class="video-meta">
+                  <h3>津波からにげる3つのポイント</h3>
+                  <p>対象: 小学4-6年 ／ 1:30</p>
+                  <button class="play-btn">再生</button>
+                </div>
+              </article>
+            </div>
+
+            <div class="player" id="videoPlayer" hidden>
+              <video id="videoEl" controls playsinline>
+                <source id="videoSrc" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+                <track kind="captions" srclang="ja" label="日本語字幕" default />
+              </video>
+              <div class="player-actions">
+                <button id="miniQuizBtn">理解度クイズへ</button>
+                <label>速度
+                  <select id="playbackRate">
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                  </select>
+                </label>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="initiativesTab" class="tab-panel" hidden>
-          <ul class="initiative-list" id="initiativeList" aria-live="polite"></ul>
+          <div id="initiativesTab" class="tab-panel" hidden>
+            <ul class="initiative-list" id="initiativeList" aria-live="polite"></ul>
+          </div>
         </div>
       </section>
 
       <!-- My -->
       <section id="my" class="page" aria-labelledby="myTitle" hidden>
         <h2 id="myTitle">マイ</h2>
-        <div class="my-grid">
-          <section class="card">
-            <h3>きょうの学び</h3>
-            <p>連続 <strong id="streakMy">0</strong> 日学習中</p>
-          </section>
-          <section class="card">
-            <h3>バッジ</h3>
-            <div id="badgeShelf" class="badges" aria-live="polite"></div>
-          </section>
-          <section class="card">
-            <h3>弱点マップ</h3>
-            <div class="radar" aria-label="弱点カテゴリの可視化（簡易）">
-              <ul id="weaknessList" class="list"></ul>
-            </div>
-          </section>
-          <section class="card">
-            <h3>家族共有</h3>
-            <button id="shareBtn">進捗QRを表示</button>
-            <div id="shareCode" class="qr" hidden>QR: FUJISAWA-1234</div>
-          </section>
+        <div class="stage">
+          <div class="my-grid">
+            <section class="card game-card">
+              <h3>きょうの学び</h3>
+              <p>連続 <strong id="streakMy">0</strong> 日学習中</p>
+            </section>
+            <section class="card game-card">
+              <h3>バッジ</h3>
+              <div id="badgeShelf" class="badges" aria-live="polite"></div>
+            </section>
+            <section class="card game-card">
+              <h3>弱点マップ</h3>
+              <div class="radar" aria-label="弱点カテゴリの可視化（簡易）">
+                <ul id="weaknessList" class="list"></ul>
+              </div>
+            </section>
+            <section class="card game-card">
+              <h3>家族共有</h3>
+              <button id="shareBtn">進捗QRを表示</button>
+              <div id="shareCode" class="qr" hidden>QR: FUJISAWA-1234</div>
+            </section>
+          </div>
         </div>
       </section>
 
       <!-- Utility pages -->
       <section id="map" class="page" aria-labelledby="mapTitle" hidden>
         <h2 id="mapTitle">防災マップ</h2>
-        <div class="card">
-          <p>簡易版：避難所や津波避難ビルを表示（試作）。</p>
-          <div class="map-placeholder" role="img" aria-label="地図のプレースホルダ">地図</div>
+        <div class="stage">
+          <div class="card game-card">
+            <p>簡易版：避難所や津波避難ビルを表示（試作）。</p>
+            <div class="map-placeholder" role="img" aria-label="地図のプレースホルダ">地図</div>
+          </div>
         </div>
       </section>
 
       <section id="kit" class="page" aria-labelledby="kitTitle" hidden>
         <h2 id="kitTitle">持ち出しチェック</h2>
-        <div class="card">
-          <div class="row">
-            <label for="kitPreset">プリセット</label>
-            <select id="kitPreset">
-              <option value="elementary">小学生</option>
-              <option value="junior">中学生</option>
-              <option value="family">家族</option>
-            </select>
+        <div class="stage">
+          <div class="card game-card">
+            <div class="row">
+              <label for="kitPreset">プリセット</label>
+              <select id="kitPreset">
+                <option value="elementary">小学生</option>
+                <option value="junior">中学生</option>
+                <option value="family">家族</option>
+              </select>
+            </div>
+            <ul id="kitList" class="checklist"></ul>
           </div>
-          <ul id="kitList" class="checklist"></ul>
         </div>
       </section>
 
       <section id="calendar" class="page" aria-labelledby="calTitle" hidden>
         <h2 id="calTitle">訓練カレンダー</h2>
-        <div class="card">
-          <ul id="calendarList" class="list"></ul>
+        <div class="stage">
+          <div class="card game-card">
+            <ul id="calendarList" class="list"></ul>
+          </div>
         </div>
       </section>
 
       <section id="settings" class="page" aria-labelledby="settingsTitle" hidden>
         <h2 id="settingsTitle">設定</h2>
-        <div class="card">
-          <div class="row">
-            <label for="grade">学年</label>
-            <select id="grade">
-              <option>小1-3</option>
-              <option>小4-6</option>
-              <option>中学生</option>
-            </select>
-          </div>
-          <div class="row">
-            <label for="voice">ふじきゅんボイス</label>
-            <input id="voice" type="checkbox" checked />
-          </div>
-          <div class="row">
-            <label for="easy">やさしい日本語</label>
-            <input id="easy" type="checkbox" />
+        <div class="stage">
+          <div class="card game-card">
+            <div class="row">
+              <label for="grade">学年</label>
+              <select id="grade">
+                <option>小1-3</option>
+                <option>小4-6</option>
+                <option>中学生</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="voice">ふじきゅんボイス</label>
+              <input id="voice" type="checkbox" checked />
+            </div>
+            <div class="row">
+              <label for="easy">やさしい日本語</label>
+              <input id="easy" type="checkbox" />
+            </div>
           </div>
         </div>
       </section>
