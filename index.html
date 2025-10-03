@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>藤沢市 防災ゲームアプリ（試作）</title>
+    <meta name="description" content="藤沢市民の防災意識を高める学習・クイズ・AR体験アプリの試作UI" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header" role="banner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">🛟</div>
+        <div class="brand-text">
+          <h1 class="app-title">ふじさわ防災</h1>
+          <p class="app-subtitle">ナビゲーター: ふじきゅん</p>
+        </div>
+      </div>
+      <button class="header-btn" id="openMenuBtn" aria-label="メニューを開く" aria-haspopup="true" aria-controls="sideMenu">☰</button>
+    </header>
+
+    <nav id="sideMenu" class="side-menu" aria-label="サブメニュー" hidden>
+      <button class="close" id="closeMenuBtn" aria-label="メニューを閉じる">×</button>
+      <ul>
+        <li><button class="menu-link" data-target="map">防災マップ</button></li>
+        <li><button class="menu-link" data-target="kit">持ち出しチェック</button></li>
+        <li><button class="menu-link" data-target="calendar">訓練カレンダー</button></li>
+        <li><button class="menu-link" data-target="settings">設定（保護者/先生）</button></li>
+      </ul>
+    </nav>
+
+    <main id="app" class="app" role="main">
+      <section id="home" class="page" aria-labelledby="homeTitle">
+        <h2 id="homeTitle" class="visually-hidden">ホーム</h2>
+        <div class="hero">
+          <div class="hero-left">
+            <h3>きょうのミッション</h3>
+            <ul class="missions" aria-label="きょうのミッション">
+              <li><button class="mission-btn" data-open-tab="quiz">クイズに3問挑戦</button></li>
+              <li><button class="mission-btn" data-open-tab="learn">1分動画を1本視聴</button></li>
+              <li><button class="mission-btn" data-open-tab="ar">ARで安全チェック</button></li>
+            </ul>
+          </div>
+          <div class="hero-right" aria-label="ふじきゅんの応援">
+            <div class="fujikyun" role="img" aria-label="ふじきゅん">✨ふじきゅん✨</div>
+            <p class="fujikyun-line" aria-live="polite">こんにちは！ きょうも少しだけ防災を学ぼう！</p>
+          </div>
+        </div>
+
+        <div class="home-grid">
+          <section class="card news">
+            <h3>藤沢市の最新防災ニュース</h3>
+            <ul id="newsList" class="list"></ul>
+          </section>
+          <section class="card events">
+            <h3>今週の訓練</h3>
+            <ul id="eventList" class="list"></ul>
+          </section>
+          <section class="card progress">
+            <h3>学習の進捗</h3>
+            <div class="progress-ring" aria-label="達成率">
+              <div class="ring"></div>
+              <div class="ring-label"><span id="level">Lv 1</span><small id="points">0 pt</small></div>
+            </div>
+            <div class="streak" aria-label="連続日数">連続 <strong id="streak">0</strong> 日</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="quiz" class="page" aria-labelledby="quizTitle" hidden>
+        <h2 id="quizTitle">クイズ</h2>
+        <div class="chip-row" role="tablist" aria-label="カテゴリ">
+          <button class="chip is-active" role="tab" aria-selected="true" data-category="earthquake">地震</button>
+          <button class="chip" role="tab" aria-selected="false" data-category="tsunami">津波</button>
+          <button class="chip" role="tab" aria-selected="false" data-category="typhoon">台風</button>
+          <button class="chip" role="tab" aria-selected="false" data-category="evac">避難</button>
+          <button class="chip" role="tab" aria-selected="false" data-category="local">地域</button>
+        </div>
+
+        <div id="quizCard" class="quiz-card" aria-live="polite" aria-atomic="true">
+          <div class="quiz-head">
+            <div class="quiz-meta"><span id="quizCounter">1/5</span>・<span id="quizCategoryLabel">地震</span></div>
+          </div>
+          <div class="quiz-body">
+            <p id="quizQuestion" class="question">読み込み中...</p>
+            <div class="choices" role="group" aria-label="選択肢">
+              <button class="choice" data-index="0"></button>
+              <button class="choice" data-index="1"></button>
+              <button class="choice" data-index="2"></button>
+              <button class="choice" data-index="3"></button>
+            </div>
+          </div>
+          <div class="quiz-foot">
+            <div id="quizFeedback" class="feedback" aria-live="polite"></div>
+            <button id="nextQuestionBtn" class="primary" disabled>つぎへ</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="ar" class="page" aria-labelledby="arTitle" hidden>
+        <h2 id="arTitle">AR体験</h2>
+        <div class="card">
+          <p class="safety">周りを見て、止まって体験しよう。室内で歩きながらの利用はしません。</p>
+          <div class="ar-stage" role="img" aria-label="ARシミュレーション画面">
+            <div class="ar-overlay" id="arOverlay">家具の転倒を防ぐには、L字金具で固定しよう</div>
+          </div>
+          <div class="row">
+            <label for="arScene">シーン選択</label>
+            <select id="arScene">
+              <option value="furniture">家具転倒</option>
+              <option value="tsunami">津波の高さ</option>
+              <option value="liquefaction">液状化</option>
+              <option value="route">避難経路</option>
+            </select>
+            <button id="arStartBtn" class="primary">体験をはじめる</button>
+          </div>
+          <div class="row">
+            <button id="arSnapBtn">スクショ保存</button>
+            <input id="arMemo" type="text" inputmode="text" placeholder="学んだことを1行でメモ" aria-label="学んだことメモ" />
+          </div>
+        </div>
+      </section>
+
+      <section id="learn" class="page" aria-labelledby="learnTitle" hidden>
+        <h2 id="learnTitle">学ぶ（動画・藤沢市の取組）</h2>
+        <div class="tabs">
+          <button class="tab is-active" data-tab="videos" aria-selected="true">動画</button>
+          <button class="tab" data-tab="initiatives" aria-selected="false">藤沢市の取組</button>
+        </div>
+
+        <div id="videosTab" class="tab-panel">
+          <div class="video-list">
+            <article class="video-card">
+              <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="地震のときの身の守り方 サムネイル" />
+              <div class="video-meta">
+                <h3>1分でわかる 地震のとき</h3>
+                <p>対象: 小学1-3年 ／ 1:00</p>
+                <button class="play-btn" data-video="video1">再生</button>
+              </div>
+            </article>
+            <article class="video-card">
+              <img src="https://placehold.co/320x180?text=%E5%8B%95%E7%94%BB" alt="津波避難の基本 サムネイル" />
+              <div class="video-meta">
+                <h3>津波からにげる3つのポイント</h3>
+                <p>対象: 小学4-6年 ／ 1:30</p>
+                <button class="play-btn" data-video="video2">再生</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="player" id="videoPlayer" hidden>
+            <video id="videoEl" controls playsinline>
+              <source id="videoSrc" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4" />
+              <track kind="captions" srclang="ja" label="日本語字幕" default />
+            </video>
+            <div class="player-actions">
+              <button id="miniQuizBtn">理解度クイズへ</button>
+              <label>速度
+                <select id="playbackRate">
+                  <option value="0.75">0.75x</option>
+                  <option value="1" selected>1x</option>
+                  <option value="1.25">1.25x</option>
+                  <option value="1.5">1.5x</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div id="initiativesTab" class="tab-panel" hidden>
+          <ul class="initiative-list" id="initiativeList" aria-live="polite"></ul>
+        </div>
+      </section>
+
+      <section id="my" class="page" aria-labelledby="myTitle" hidden>
+        <h2 id="myTitle">マイ</h2>
+        <div class="my-grid">
+          <section class="card">
+            <h3>きょうの学び</h3>
+            <p>連続 <strong id="streakMy">0</strong> 日学習中</p>
+          </section>
+          <section class="card">
+            <h3>バッジ</h3>
+            <div id="badgeShelf" class="badges" aria-live="polite"></div>
+          </section>
+          <section class="card">
+            <h3>弱点マップ</h3>
+            <div class="radar" aria-label="弱点カテゴリの可視化（簡易）">
+              <ul id="weaknessList" class="list"></ul>
+            </div>
+          </section>
+          <section class="card">
+            <h3>家族共有</h3>
+            <button id="shareBtn">進捗QRを表示</button>
+            <div id="shareCode" class="qr" hidden>QR: FUJISAWA-1234</div>
+          </section>
+        </div>
+      </section>
+
+      <section id="map" class="page" aria-labelledby="mapTitle" hidden>
+        <h2 id="mapTitle">防災マップ</h2>
+        <div class="card">
+          <p>簡易版：避難所や津波避難ビルを表示（試作）。</p>
+          <div class="map-placeholder" role="img" aria-label="地図のプレースホルダ">地図</div>
+        </div>
+      </section>
+
+      <section id="kit" class="page" aria-labelledby="kitTitle" hidden>
+        <h2 id="kitTitle">持ち出しチェック</h2>
+        <div class="card">
+          <div class="row">
+            <label for="kitPreset">プリセット</label>
+            <select id="kitPreset">
+              <option value="elementary">小学生</option>
+              <option value="junior">中学生</option>
+              <option value="family">家族</option>
+            </select>
+          </div>
+          <ul id="kitList" class="checklist"></ul>
+        </div>
+      </section>
+
+      <section id="calendar" class="page" aria-labelledby="calTitle" hidden>
+        <h2 id="calTitle">訓練カレンダー</h2>
+        <div class="card">
+          <ul id="calendarList" class="list"></ul>
+        </div>
+      </section>
+
+      <section id="settings" class="page" aria-labelledby="settingsTitle" hidden>
+        <h2 id="settingsTitle">設定</h2>
+        <div class="card">
+          <div class="row">
+            <label for="grade">学年</label>
+            <select id="grade">
+              <option>小1-3</option>
+              <option>小4-6</option>
+              <option>中学生</option>
+            </select>
+          </div>
+          <div class="row">
+            <label for="voice">ふじきゅんボイス</label>
+            <input id="voice" type="checkbox" checked />
+          </div>
+          <div class="row">
+            <label for="easy">やさしい日本語</label>
+            <input id="easy" type="checkbox" />
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="メインメニュー">
+      <button class="tablink is-active" data-target="home" aria-label="ホーム" aria-current="page">ホーム</button>
+      <button class="tablink" data-target="quiz" aria-label="クイズ">クイズ</button>
+      <button class="tablink" data-target="ar" aria-label="AR体験">AR</button>
+      <button class="tablink" data-target="learn" aria-label="学ぶ">学ぶ</button>
+      <button class="tablink" data-target="my" aria-label="マイ">マイ</button>
+    </nav>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+    <script src="app.js"></script>
+  </body>
+  <footer class="app-footer" role="contentinfo">
+    <small>© 藤沢市 防災学習アプリ（試作） — キャラクター名: ふじきゅん</small>
+  </footer>
+</html>
