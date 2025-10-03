@@ -24,23 +24,12 @@ function setTab(targetId) {
   });
 }
 
-// Secondary menu: open/close
-const backdrop = $("#menuBackdrop");
-const sheet = $("#moreMenu");
-function openMenu() { backdrop.hidden = false; sheet.hidden = false; $("#closeMenuBtn").focus(); }
-function closeMenu() { backdrop.hidden = true; sheet.hidden = true; }
-$("#openMenuBtn").addEventListener("click", openMenu);
-$("#closeMenuBtn").addEventListener("click", closeMenu);
-backdrop.addEventListener("click", closeMenu);
-document.addEventListener("keydown", (e) => { if (!sheet.hidden && e.key === "Escape") closeMenu(); });
-$all(".sheet-link").forEach(b => b.addEventListener("click", (e) => { setTab(e.currentTarget.dataset.target); closeMenu(); }));
-
 // Bottom tabs
 $all(".tablink").forEach(b => b.addEventListener("click", (e) => setTab(e.currentTarget.dataset.target)));
 
 // Missions / Quick access
 $all(".mission-btn, .quick-item").forEach(b => b.addEventListener("click", (e) => {
-  const target = e.currentTarget.dataset.openTab || e.currentTarget.dataset.open-tab; // dataset.camelCase for open-tab
+  const target = e.currentTarget.dataset.openTab || e.currentTarget.dataset.open-tab;
   setTab(target);
 }));
 
@@ -59,10 +48,12 @@ renderList("#newsList", news);
 renderList("#eventList", events);
 
 // Progress + streak
-function updateProgressUI() {
+function syncHUD() {
   $("#points").textContent = `${state.points} pt`;
-  $("#level").textContent = `Lv ${state.level}`;
+  $("#level").textContent = `${state.level}`;
   $("#streak").textContent = state.streak;
+  $("#pointsHUD").textContent = `${state.points} pt`;
+  $("#levelHUD").textContent = `${state.level}`;
   $("#streakMy").textContent = state.streak;
 }
 (function updateStreak() {
@@ -73,7 +64,7 @@ function updateProgressUI() {
     state.lastStudyDate = today;
     saveState();
   }
-  updateProgressUI();
+  syncHUD();
 })();
 
 // Quiz
@@ -127,7 +118,7 @@ $all(".choice").forEach(btn => btn.addEventListener("click", (e) => {
     state.points += 1;
     if (state.points % 10 === 0) { state.level += 1; showToast("レベルアップ！"); }
     maybeAddBadge("first_correct", "はじめての正解");
-    saveState(); updateProgressUI();
+    saveState(); syncHUD();
   } else {
     incWeakness(currentCategory);
   }
@@ -152,10 +143,8 @@ $all(".tab").forEach(t => t.addEventListener("click", (e) => {
   $("#videosTab").hidden = tab !== "videos";
   $("#initiativesTab").hidden = tab !== "initiatives";
 }));
-$all(".play-btn").forEach(b => b.addEventListener("click", (e) => {
-  const id = e.currentTarget.dataset.video;
-  const src = id === "video2" ? "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" : "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
-  $("#videoSrc").src = src;
+$all(".play-btn").forEach(b => b.addEventListener("click", () => {
+  $("#videoSrc").src = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
   $("#videoPlayer").hidden = false;
   $("#videoEl").load(); $("#videoEl").play();
 }));
