@@ -37,7 +37,7 @@ body { margin: 0; font-family: "Zen Kaku Gothic New", system-ui, -apple-system, 
 .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
 .quick-item { border: 1px solid #9fd0ff; background: linear-gradient(180deg,#f0f9ff,#e6f3ff); padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 700; box-shadow: 0 2px 6px rgba(13,110,253,0.12); }
 
-/* Home panels */
+/* Home panel */
 .home-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
 .list { margin: 0; padding-left: 18px; }
 .progress-ring { position: relative; width: 140px; height: 140px; display: grid; place-items: center; margin: 8px 0; }
