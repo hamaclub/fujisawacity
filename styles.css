@@ -24,16 +24,16 @@ body { margin: 0; font-family: "Zen Kaku Gothic New", system-ui, -apple-system, 
 .hero-left .missions { list-style: none; padding: 0; margin: 8px 0 0; display: grid; gap: 8px; }
 .mission-btn { width: 100%; border: 1px solid #9fd0ff; background: linear-gradient(180deg,#e8f5ff,#dff0ff); padding: 14px; border-radius: 14px; box-shadow: 0 2px 6px rgba(13,110,253,0.15); font-weight: 600; }
 .mission-btn:active { transform: translateY(1px); }
-.hero-right { position: relative; display: grid; justify-items: center; align-content: center; background: radial-gradient(200px 120px at 80% 20%, #dff0ff, #eaf6ff); border: 1px solid #bfe0ff; border-radius: 16px; padding: 12px; min-height: 160px; overflow: hidden; }
+.hero-right { position: relative; display: grid; justify-items: center; align-content: center; background: radial-gradient(200px 120px at 80% 20%, #dff0ff, #eaf6ff); border: 1px solid #bfe0ff; border-radius: 16px; padding: 12px; min-height: 120px; overflow: hidden; }
 .hero-right::after { content: ""; position: absolute; inset: -20%; background: radial-gradient(140px 60px at 20% -10%, rgba(13,110,253,0.15), transparent); pointer-events: none; }
-.fujikyun-img { width: min(52vw, 220px); height: auto; object-fit: contain; filter: drop-shadow(0 10px 16px rgba(13,110,253,0.25)); animation: float 3s ease-in-out infinite; }
-.fujikyun-line { margin-top: 8px; font-weight: 600; color: #0a4a6f; }
-@keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-6px);} }
+.fujikyun-img { width: min(32vw, 120px); height: auto; object-fit: contain; filter: drop-shadow(0 6px 10px rgba(13,110,253,0.2)); animation: float 3s ease-in-out infinite; }
+.fujikyun-line { margin-top: 8px; font-weight: 600; color: #0a4a6f; font-size: 14px; }
+@keyframes float { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-4px);} }
 
 /* Sticker mascot (decorative) */
-.mascot-sticker { position: fixed; right: 8px; bottom: 92px; width: 88px; height: auto; object-fit: contain; pointer-events: none; opacity: 0.9; filter: drop-shadow(0 8px 14px rgba(4,45,94,0.18)); z-index: 15; }
+.mascot-sticker { position: fixed; right: 8px; bottom: 92px; width: 60px; height: auto; object-fit: contain; pointer-events: none; opacity: 0.7; filter: drop-shadow(0 4px 8px rgba(4,45,94,0.15)); z-index: 15; }
 
-/* Card */
+/* Cards */
 .card { background: #fff; border: 1px solid #e5f2fb; border-radius: 16px; padding: 12px; box-shadow: 0 4px 14px rgba(4,45,94,0.06); }
 .game-card { border: 1px solid #9fd0ff; background: linear-gradient(180deg,#ffffff,#f8fcff); box-shadow: 0 8px 16px rgba(13,110,253,0.10); }
 
@@ -97,5 +97,6 @@ body { margin: 0; font-family: "Zen Kaku Gothic New", system-ui, -apple-system, 
   .hero { grid-template-columns: 1.2fr 1fr; }
   .home-grid { grid-template-columns: 1fr 1fr 1fr; }
   .my-grid { grid-template-columns: 1fr 1fr; }
-  .mascot-sticker { width: 112px; }
+  .mascot-sticker { width: 72px; }
+  .fujikyun-img { width: min(24vw, 140px); }
 }
