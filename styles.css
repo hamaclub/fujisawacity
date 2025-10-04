@@ -33,7 +33,7 @@ body { margin: 0; font-family: "Zen Kaku Gothic New", system-ui, -apple-system, 
 /* Sticker mascot (decorative) */
 .mascot-sticker { position: fixed; right: 8px; bottom: 92px; width: 88px; height: auto; object-fit: contain; pointer-events: none; opacity: 0.9; filter: drop-shadow(0 8px 14px rgba(4,45,94,0.18)); z-index: 15; }
 
-/* Cards */
+/* Card */
 .card { background: #fff; border: 1px solid #e5f2fb; border-radius: 16px; padding: 12px; box-shadow: 0 4px 14px rgba(4,45,94,0.06); }
 .game-card { border: 1px solid #9fd0ff; background: linear-gradient(180deg,#ffffff,#f8fcff); box-shadow: 0 8px 16px rgba(13,110,253,0.10); }
 
