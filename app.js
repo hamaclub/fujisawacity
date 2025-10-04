@@ -143,8 +143,12 @@ $all(".tab").forEach(t => t.addEventListener("click", (e) => {
   $("#videosTab").hidden = tab !== "videos";
   $("#initiativesTab").hidden = tab !== "initiatives";
 }));
-$all(".play-btn").forEach(b => b.addEventListener("click", () => {
+$all(".play-btn").forEach(() => {
+  // デモ用：同一動画
   $("#videoSrc").src = "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4";
+  // クリック時に再生
+});
+$all(".play-btn").forEach(b => b.addEventListener("click", () => {
   $("#videoPlayer").hidden = false;
   $("#videoEl").load(); $("#videoEl").play();
 }));
