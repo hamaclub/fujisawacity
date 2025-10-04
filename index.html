@@ -19,7 +19,6 @@
           <p class="app-subtitle">ナビゲーター: ふじきゅん</p>
         </div>
       </div>
-      <!-- メニュー削除済み（何も表示しない） -->
       <div class="header-spacer" aria-hidden="true"></div>
     </header>
 
@@ -46,12 +45,12 @@
               </ul>
             </div>
             <div class="hero-right" aria-label="ふじきゅんの応援">
-              <div class="fujikyun" role="img" aria-label="ふじきゅん">✨ふじきゅん✨</div>
+              <img class="fujikyun-img" src="被写体.png" alt="ふじきゅん" />
               <p class="fujikyun-line" aria-live="polite">こんにちは！ きょうも少しだけ防災を学ぼう！</p>
             </div>
           </div>
 
-          <!-- Quick Access（メニュー代替・主画面を塞がない） -->
+          <!-- Quick Access -->
           <section class="card quick">
             <h3>クイックアクセス</h3>
             <div class="quick-grid">
@@ -109,7 +108,7 @@
             </div>
             <div class="quiz-foot">
               <div id="quizFeedback" class="feedback" aria-live="polite"></div>
-              <button id="nextQuestionBtn" class="primary" disabled>次へ</button>
+              <button id="nextQuestionBtn" class="primary" disabled>つぎへ</button>
             </div>
           </div>
         </div>
@@ -293,6 +292,8 @@
       <button class="tablink" data-target="learn" aria-label="学ぶ">学ぶ</button>
       <button class="tablink" data-target="my" aria-label="マイ">マイ</button>
     </nav>
+
+    <img class="mascot-sticker" src="被写体.png" alt="" aria-hidden="true" />
 
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
